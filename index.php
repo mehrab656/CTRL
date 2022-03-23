@@ -1,90 +1,49 @@
 <?php
 
 use Order\CTRL\EndPointList;
+use Order\CTRL\OrderCTRL;
 
 /**
  * Plugin Name: CTRL
  */
-
-class OrderCTRL{
-	private static $instance;
-
-	public static function get_instance(){
-		if (null===self::$instance){
-			self::$instance = new self();
-		}
-		return self::$instance;
-	}
-
-	public function __construct() {
-		EndPointList::get_instance();
-		add_action( 'admin_menu', [$this,'ctrl_register_menu_item'] );
-		add_action( 'admin_menu', [$this,'ctrl_reister_endpoint_page'] );
-	}
-
-	function ctrl_register_menu_item() {
-		add_menu_page(
-			__( 'Order CTRL' ),
-			'Order CTRL',
-			'manage_options',
-			'api-order-ctrl',
-			[$this,'ctrl_custom_page'],
-			'dashicons-cart',
-			6
-		);
-	}
-	function ctrl_reister_endpoint_page(){
-		add_submenu_page( 'api-order-ctrl', 'EndPoints', 'End Points', 'manage_options', 'api-endpoints-list', [$this,'ctrl_endpoint_lists'], 7 );
-	}
-	function ctrl_endpoint_lists(){
-
-	}
-
-
-	/**
-	 * Display a custom menu page
-	 */
-	function ctrl_custom_page() {
-		?>
-		<div class="wrap">
-			<h1><?= __( 'Order CTRL' ) ?></h1>
-			<div class="ajax-response"></div>
-			<p><?= __( 'Add Your Api Credential From Woo Commerce Settings' ) ?></p>
-			<div class="col-6">
-				<form method="post" name="authTokenForm" id="authTokenForm" class="validate" novalidate="novalidate">
-					<table class="form-table" role="presentation">
-						<tbody>
-						<tr class="form-field form-required">
-							<th scope="row">
-								<label for="consumerKey">Consumer Key:</label>
-							</th>
-							<td>
-								<input name="consumerKey" type="text" id="consumerKey" value="" aria-required="true"
-								       autocapitalize="none" autocorrect="off">
-							</td>
-						</tr>
-						<tr class="form-field form-required">
-							<th scope="row"><label for="secret">Consumer Secret:</th>
-							<td><input name="secret" type="password" id="secret" value=""></td>
-						</tr>
-
-
-						</tbody>
-					</table>
-
-
-					<p class="submit">
-						<input type="submit" name="addToken" id="addToken" class="button button-primary right"
-						       value="Add Token"></p>
-				</form>
-
-			</div>
-		</div>
-		<?php
-	}
+if ( ! defined( 'ABSPATH' ) ) {
+	header( 'Status: 403 Forbidden' );
+	header( 'HTTP/1.1 403 Forbidden' );
+	die();
 }
 
-OrderCTRL::get_instance();
+if ( ! defined( 'CTRL_PLUGIN_VERSION' ) ) {
+	define( 'CTRL_PLUGIN_VERSION', '1.0.0' );
+}
+
+if ( ! defined( 'CTRL_PLUGIN_FILE' ) ) {
+	define( 'CTRL_PLUGIN_FILE', __FILE__ );
+}
+
+if ( ! defined( 'CTRL_PLUGIN_BASENAME' ) ) {
+	define( 'CTRL_PLUGIN_BASENAME', plugin_basename( CTRL_PLUGIN_FILE ) );
+}
+
+if ( ! defined( 'CTRL_PLUGIN_PATH' ) ) {
+	/** @define "RWP_SM_PLUGIN_PATH" "./" */
+	define( 'CTRL_PLUGIN_PATH', plugin_dir_path( CTRL_PLUGIN_FILE ) );
+}
+
+if ( ! defined( 'CTRL_PLUGIN_URL' ) ) {
+	define( 'CTRL_PLUGIN_URL', plugin_dir_url( CTRL_PLUGIN_FILE ) );
+}
+
+if ( ! class_exists( 'Order\CTRL\OrderCTRL', false ) ) {
+	require_once CTRL_PLUGIN_PATH . 'OrderCTRL.php';
+}
+
+
+function orderCTRL(){
+	OrderCTRL::get_instance();
+}
+
+orderCTRL();
+
 
 
 

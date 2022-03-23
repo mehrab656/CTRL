@@ -15,10 +15,7 @@ class EndPointList {
     }
 
     public function __construct() {
-	    echo '<pre>';
-	    print_r("Boom");
-	    echo '</pre>';
-	    exit();
+
     }
 
 
