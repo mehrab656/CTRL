@@ -13,11 +13,14 @@ class OrderCTRL {
 	}
 
 	public function __construct() {
+
+
 		add_action( 'admin_notices', [ $this, 'admin_notice' ] );
 
 		add_action( 'admin_menu', [$this,'ctrl_register_menu_item'] );
 		add_action( 'admin_menu', [$this,'ctrl_register_endpoint_page'] );
 		add_action( 'admin_init', [ $this, 'handle_post' ] );
+
 
 	}
 
@@ -54,6 +57,7 @@ class OrderCTRL {
                     if ($newKeys===$this->loadkeys){
                         $this->add_settings_status(__('Nothing Has been Changed'),'error');
                     }else{
+                        $tableExist = $this->wc_table_exist();
                         $this->loadkeys = $newKeys;
                         update_option('order_ctrl_api_keys',$newKeys);
                         $this->add_settings_status('Api Connected','success');
@@ -66,6 +70,25 @@ class OrderCTRL {
 
         }
 
+    }
+    function wc_table_exist(){
+        global $wpdb;
+
+        $tableName = 'wp_woocommerce_api_keys';
+        if ($wpdb->get_var("SHOW TABLES LIKE '$tableName'")!==$tableName){
+	        $result = [
+                    'exist'=>false,
+                'message'=>__('Woocommerce is not installed or Rest Api key is not activated')
+            ];
+        }
+	    $result = [
+		    'exist'=>true,
+		    'message'=>__('Woocommerce is installed')
+	    ];
+	    echo '<pre>';
+	    var_dump($result);
+	    echo '</pre>';
+	    exit();
     }
     private $loadkeys;
     function get_previous_keys(){
